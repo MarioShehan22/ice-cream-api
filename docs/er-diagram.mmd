@@ -1,0 +1,39 @@
+erDiagram
+    USERS {
+        uint id PK
+        string name
+        string email UK
+        string password_hash
+        string role "owner | manager | cashier"
+        datetime created_at
+        datetime updated_at
+    }
+    CATEGORIES {
+        uint id PK
+        string name UK "flavour: Chocolate, Vanilla, ..."
+        datetime created_at
+    }
+    ITEMS {
+        uint id PK
+        string name
+        string description
+        uint category_id FK
+        float price
+        int quantity
+        datetime created_at
+        datetime updated_at
+    }
+    CUSTOMERS {
+        uint id PK
+        string name
+        string email UK
+        string phone
+        string address
+        datetime created_at
+        datetime updated_at
+    }
+    REVOKED_TOKENS {
+        string id PK "JWT jti"
+        datetime expires_at
+    }
+    CATEGORIES ||--o{ ITEMS : "has many (ON DELETE RESTRICT)"
