@@ -7,7 +7,7 @@ Backend for an ice cream shop: JWT authentication, role-based access control (Ow
 ## Quick start
 
 ```bash
-git clone <your-repo-url> && cd icecream-api
+git clone https://github.com/MarioShehan22/ice-cream-api.git
 cp .env.example .env          # on Windows: copy .env.example .env
 go mod tidy
 go run ./cmd/server
