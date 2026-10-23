@@ -278,7 +278,6 @@ docs/er-diagram.mmd         ER diagram source
 postman/                    Postman collection
 docker/mysql-init/          creates the test database in Docker
 icecream.sql                schema + seed data for MySQL
-docker-compose.yml          MySQL 8 for local development
 ```
 
 ## Postman
