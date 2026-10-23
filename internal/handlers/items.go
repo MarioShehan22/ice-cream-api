@@ -43,7 +43,7 @@ func (h *ItemHandler) List(c *fiber.Ctx) error {
 
 	q := h.db.Model(&models.Item{})
 	if s := strings.TrimSpace(c.Query("search")); s != "" {
-		q = q.Where(`LOWER(items.name) LIKE ? ESCAPE '\'`, likePattern(s))
+		q = q.Where(`LOWER(items.name) LIKE ?`, likePattern(s))
 	}
 	if cid := c.QueryInt("category_id", 0); cid > 0 {
 		q = q.Where("items.category_id = ?", cid)

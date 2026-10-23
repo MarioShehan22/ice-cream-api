@@ -41,7 +41,7 @@ func (h *CustomerHandler) List(c *fiber.Ctx) error {
 	q := h.db.Model(&models.Customer{})
 	if s := strings.TrimSpace(c.Query("search")); s != "" {
 		p := likePattern(s)
-		q = q.Where(`LOWER(name) LIKE ? ESCAPE '\' OR LOWER(email) LIKE ? ESCAPE '\' OR phone LIKE ? ESCAPE '\'`, p, p, p)
+		q = q.Where(`LOWER(name) LIKE ? OR LOWER(email) LIKE ? OR phone LIKE ?`, p, p, p)
 	}
 	q = q.Session(&gorm.Session{})
 

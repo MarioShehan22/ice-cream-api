@@ -7,6 +7,8 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -15,6 +17,7 @@ import (
 
 	"icecream-api/internal/auth"
 	"icecream-api/internal/database"
+	"icecream-api/internal/models"
 	"icecream-api/internal/server"
 )
 
@@ -26,10 +29,33 @@ var (
 	cashier = creds{"cashier@icecream.test", "Cashier@123"}
 )
 
+// dbName extracts the database name from user:pass@tcp(host:port)/dbname?params
+func dbName(dsn string) string {
+	if i := strings.LastIndex(dsn, "/"); i >= 0 {
+		dsn = dsn[i+1:]
+	}
+	if i := strings.Index(dsn, "?"); i >= 0 {
+		dsn = dsn[:i]
+	}
+	return dsn
+}
+
 func setup(t *testing.T) *fiber.App {
 	t.Helper()
-	db, err := database.Connect("file::memory:?_pragma=foreign_keys(1)")
+	dsn := os.Getenv("TEST_DATABASE_DSN")
+	if dsn == "" {
+		t.Skip("TEST_DATABASE_DSN not set; skipping MySQL integration tests (see README)")
+	}
+	// the tests DROP all tables, so refuse to run against anything that isn't clearly a test DB
+	if !strings.Contains(strings.ToLower(dbName(dsn)), "test") {
+		t.Fatal("TEST_DATABASE_DSN must point to a database whose name contains \"test\"")
+	}
+	db, err := database.Connect(dsn)
 	if err != nil {
+		t.Fatal(err)
+	}
+	// start every test from an empty schema (children first because of the FK)
+	if err := db.Migrator().DropTable(&models.Item{}, &models.Category{}, &models.Customer{}, &models.RevokedToken{}, &models.User{}); err != nil {
 		t.Fatal(err)
 	}
 	if err := database.Migrate(db); err != nil {
@@ -38,6 +64,11 @@ func setup(t *testing.T) *fiber.App {
 	if err := database.Seed(db, bcrypt.MinCost); err != nil {
 		t.Fatal(err)
 	}
+	t.Cleanup(func() {
+		if sqlDB, err := db.DB(); err == nil {
+			sqlDB.Close()
+		}
+	})
 	return server.New(db, auth.NewTokenManager("test-secret-test-secret", time.Hour))
 }
 

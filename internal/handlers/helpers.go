@@ -53,7 +53,7 @@ func isNotFound(err error) bool { return errors.Is(err, gorm.ErrRecordNotFound) 
 
 var likeEscaper = strings.NewReplacer(`\`, `\\`, `%`, `\%`, `_`, `\_`)
 
-// likePattern builds a case-insensitive "contains" pattern (use with ESCAPE '\').
+// likePattern builds a case-insensitive "contains" pattern (MySQL's default LIKE escape char is backslash).
 func likePattern(s string) string {
 	return "%" + likeEscaper.Replace(strings.ToLower(strings.TrimSpace(s))) + "%"
 }

@@ -22,7 +22,7 @@ func Load() (*Config, error) {
 
 	cfg := &Config{
 		Port:        get("PORT", "8080"),
-		DatabaseDSN: get("DATABASE_DSN", "root:password@tcp(localhost:3306)/ice_cream?parseTime=true"),
+		DatabaseDSN: get("DATABASE_DSN", "icecream:icecream@tcp(127.0.0.1:3306)/icecream?charset=utf8mb4&parseTime=True&loc=Local"),
 		JWTSecret:   os.Getenv("JWT_SECRET"),
 		SeedOnStart: get("SEED_ON_START", "true") == "true",
 	}

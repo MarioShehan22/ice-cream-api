@@ -33,7 +33,7 @@ type Item struct {
 	Description string    `gorm:"size:1000" json:"description"`
 	CategoryID  uint      `gorm:"not null;index" json:"category_id"`
 	Category    *Category `gorm:"foreignKey:CategoryID;constraint:OnUpdate:CASCADE,OnDelete:RESTRICT" json:"category,omitempty"`
-	Price       float64   `gorm:"not null;default:0" json:"price"`
+	Price       float64   `gorm:"type:decimal(10,2);not null;default:0" json:"price"`
 	Quantity    int       `gorm:"not null;default:0" json:"quantity"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
