@@ -42,13 +42,8 @@ cd ice-cream-api
 mysql -u <user> -p < icecream.sql
 ```
 
-Or open `icecream.sql` in MySQL Workbench / phpMyAdmin and run it.
+Or open `icecream.sql` in MySQL Workbench.
 
-**Option B - Docker**
-
-```bash
-docker compose up -d
-```
 
 Starts MySQL 8 with databases `icecream` and `icecream_test`, user `icecream`, password `icecream`, on port 3306. The API creates the tables itself on startup (auto-migration) and seeds data when `SEED_ON_START=true`.
 
